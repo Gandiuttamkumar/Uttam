@@ -1,0 +1,46 @@
+class Counter {
+    private int count = 0;
+
+    // Synchronized method for thread-safe increment
+    public synchronized void increment() {
+        count++;
+    }
+
+    public int getCount() {
+        return count;
+    }
+}
+
+class MyThread implements Runnable {
+    private Counter counter;
+
+    public MyThread(Counter counter) {
+        this.counter = counter;
+    }
+
+    @Override
+    public void run() {
+        for (int i = 0; i < 1000; i++) {
+            counter.increment();
+        }
+    }
+}
+
+public class SynchronizedCounter {
+    public static void main(String[] args) throws InterruptedException {
+        Counter counter = new Counter();
+
+        // Create and start threads
+        Thread thread1 = new Thread(new MyThread(counter));
+        Thread thread2 = new Thread(new MyThread(counter));
+
+        thread1.start();
+        thread2.start();
+
+        // Wait for threads to finish
+        thread1.join();
+        thread2.join();
+
+        System.out.println("Final count (should be 2000): " + counter.getCount());
+    }
+}
