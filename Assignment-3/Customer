@@ -1,0 +1,27 @@
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+
+class Customer implements java.io.Serializable {
+    private int id;
+    private String name;
+    private String contactNo;
+    private String address;
+
+    // Constructor and getters/setters
+    // ...
+}
+
+public class SerializeCustomer {
+    public static void main(String[] args) {
+        Customer customer = new Customer(101, "John Doe", "123-456-7890", "Main St 10");
+
+        try (FileOutputStream fileOut = new FileOutputStream("JavaObject.txt");
+             ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
+            out.writeObject(customer);
+            System.out.println("Customer object serialized successfully.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
