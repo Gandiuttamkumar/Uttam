@@ -1,0 +1,46 @@
+// Abstract class (Vehicle)
+abstract class Vehicle {
+    public abstract void move(); // Abstract method
+    
+    public void startEngine() {
+        System.out.println("Engine started.");
+    } // Concrete method
+}
+
+// Interface (Movable)
+interface Movable {
+    public void move(); // Abstract method (same name as in Vehicle)
+}
+
+// Car class (subclass of Vehicle and implementing Movable)
+class Car extends Vehicle implements Movable {
+    @Override
+    public void move() {
+        System.out.println("Car is moving.");
+    }
+}
+
+// Bike class (implementing Movable)
+class Bike implements Movable {
+    @Override
+    public void move() {
+        System.out.println("Bike is moving.");
+    }
+}
+
+public class AbstractionExample {
+    public static void main(String[] args) {
+        // Create Car object
+        Car car = new Car();
+        car.startEngine(); // Inherited from Vehicle
+        car.move(); // Implemented in Car
+
+        // Create Bike object
+        Bike bike = new Bike();
+        bike.move(); // Implemented in Bike
+
+        // Example using interface (doesn't work with abstract class directly)
+        Movable movable = new Car(); // Polymorphism - object treated as Movable
+        movable.move(); // Calls Car's move()
+    }
+}
