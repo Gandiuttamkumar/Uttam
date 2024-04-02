@@ -1,0 +1,103 @@
+import java.util.HashMap;
+
+public class MedicalTestAnalyzer {
+
+    public static enum TestResult { NORMAL, BORDERLINE, HIGH }
+
+    public static HashMap<TestResult, TestStats> analyzeTests(MedicalTest[] tests) {
+        HashMap<TestResult, TestStats> results = new HashMap<>();
+        results.put(TestResult.NORMAL, new TestStats(0, 0.0));
+        results.put(TestResult.BORDERLINE, new TestStats(0, 0.0));
+        results.put(TestResult.HIGH, new TestStats(0, 0.0));
+
+        for (MedicalTest test : tests) {
+            double value = test.getValue();
+            TestResult result = determineResult(value, test.getNormalRange());
+
+            TestStats stats = results.get(result);
+            stats.count++;
+            stats.totalValue += value;
+        }
+
+        // Calculate average value for each result (avoid division by zero)
+        for (TestResult result : results.keySet()) {
+            TestStats stats = results.get(result);
+            int count = stats.count;
+            if (count > 0) {
+                stats.averageValue = stats.totalValue / count;
+            } else {
+                stats.averageValue = 0.0;
+            }
+        }
+
+        return results;
+    }
+
+    private static TestResult determineResult(double value, double[] normalRange) {
+        if (value < normalRange[0]) {
+            return TestResult.LOW; // Not implemented for simplicity, consider adding a LOW result
+        } else if (value > normalRange[1]) {
+            return TestResult.HIGH;
+        } else if (value >= normalRange[0] - 0.1 * normalRange[0] && value <= normalRange[1] + 0.1 * normalRange[1]) {
+            // Consider a 10% buffer around the normal range for borderline
+            return TestResult.BORDERLINE;
+        } else {
+            return TestResult.NORMAL;
+        }
+    }
+
+    public static void main(String[] args) {
+        // Sample medical test data (replace with your actual data)
+        MedicalTest[] tests = new MedicalTest[]{
+                new MedicalTest("Cholesterol", 180.0, new double[]{130.0, 200.0}),
+                new MedicalTest("Blood Sugar", 105.0, new double[]{70.0, 110.0}),
+                new MedicalTest("Blood Pressure", 135.0, new double[]{90.0, 120.0}),
+                new MedicalTest("Cholesterol", 220.0, new double[]{130.0, 200.0}),
+                new MedicalTest("Blood Sugar", 80.0, new double[]{70.0, 110.0}),
+        };
+
+        // Analyze test results and print results
+        HashMap<TestResult, TestStats> testAnalysis = analyzeTests(tests);
+        for (TestResult result : testAnalysis.keySet()) {
+            TestStats stats = testAnalysis.get(result);
+            System.out.println("Test Result: " + result);
+            System.out.println("  - Patients: " + stats.count);
+            System.out.println("  - Average Value: " + String.format("%.2f", stats.averageValue));
+            System.out.println();
+        }
+    }
+}
+
+class MedicalTest {
+    private String name;
+    private double value;
+    private double[] normalRange;
+
+    public MedicalTest(String name, double value, double[] normalRange) {
+        this.name = name;
+        this.value = value;
+        this.normalRange = normalRange;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public double getValue() {
+        return value;
+    }
+
+    public double[] getNormalRange() {
+        return normalRange;
+    }
+}
+
+class TestStats {
+    public int count;
+    public double totalValue;
+    public double averageValue;
+
+    public TestStats(int count, double totalValue) {
+        this.count = count;
+        this.totalValue = totalValue;
+        this.averageValue = 0.0; //
