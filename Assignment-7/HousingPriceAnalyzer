@@ -1,0 +1,77 @@
+import java.util.HashMap;
+
+public class HousingPriceAnalyzer {
+
+    public static HashMap<String, PriceRangeStats> analyzePrices(double[] prices, double[] sqFootages) {
+        if (prices.length != sqFootages.length) {
+            throw new IllegalArgumentException("Prices and square footages must have the same length");
+        }
+
+        HashMap<String, PriceRangeStats> priceRanges = new HashMap<>();
+        priceRanges.put("100000-200000", new PriceRangeStats(0, 0.0, 0.0));
+        priceRanges.put("200000-300000", new PriceRangeStats(0, 0.0, 0.0));
+        priceRanges.put("300000-400000", new PriceRangeStats(0, 0.0, 0.0));
+        priceRanges.put("400000+", new PriceRangeStats(0, 0.0, 0.0));
+
+        for (int i = 0; i < prices.length; i++) {
+            double price = prices[i];
+            double sqFootage = sqFootages[i];
+            String priceRange;
+            if (price >= 100000 && price < 200000) {
+                priceRange = "100000-200000";
+            } else if (price >= 200000 && price < 300000) {
+                priceRange = "200000-300000";
+            } else if (price >= 300000 && price < 400000) {
+                priceRange = "300000-400000";
+            } else {
+                priceRange = "400000+";
+            }
+
+            PriceRangeStats stats = priceRanges.get(priceRange);
+            stats.count++;
+            stats.totalPrice += price;
+            stats.totalSqFootage += sqFootage;
+        }
+
+        // Calculate average price and sq footage for each range (avoid division by zero)
+        for (String rangeName : priceRanges.keySet()) {
+            PriceRangeStats stats = priceRanges.get(rangeName);
+            int count = stats.count;
+            if (count > 0) {
+                stats.averagePrice = stats.totalPrice / count;
+                stats.averageSqFootage = stats.totalSqFootage / count;
+            } else {
+                stats.averagePrice = 0.0;
+                stats.averageSqFootage = 0.0;
+            }
+        }
+
+        return priceRanges;
+    }
+
+    public static void main(String[] args) {
+        // Sample housing data (replace with your actual data)
+        double[] prices = new double[]{180000, 250000, 120000, 300000, 220000, 150000, 380000};
+        double[] sqFootages = new double[]{2000, 3200, 1800, 4000, 2800, 1600, 5000};
+
+        // Analyze housing prices and print results
+        HashMap<String, PriceRangeStats> salesAnalysis = analyzePrices(prices, sqFootages);
+        for (String priceRange : salesAnalysis.keySet()) {
+            PriceRangeStats stats = salesAnalysis.get(priceRange);
+            System.out.println("Price Range: $" + priceRange);
+            System.out.println("  - Houses Sold: " + stats.count);
+            System.out.println("  - Average Price: $" + String.format("%.2f", stats.averagePrice));
+            System.out.println("  - Average Sq Footage: " + String.format("%.2f", stats.averageSqFootage));
+            System.out.println();
+        }
+    }
+}
+
+class PriceRangeStats {
+    public int count;
+    public double totalPrice;
+    public double totalSqFootage;
+    public double averagePrice;
+    public double averageSqFootage;
+
+    public PriceRangeStats
