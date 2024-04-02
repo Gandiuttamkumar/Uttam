@@ -1,0 +1,94 @@
+import java.util.HashMap;
+
+public class WeatherAnalyzer {
+
+    public static HashMap<String, WeatherStats> analyzeWeather(WeatherData[] weatherData) {
+        HashMap<String, WeatherStats> tempRanges = new HashMap<>();
+        tempRanges.put("<0", new WeatherStats(0, 0.0));
+        tempRanges.put("0-10", new WeatherStats(0, 0.0));
+        tempRanges.put("10-20", new WeatherStats(0, 0.0));
+        tempRanges.put("20+", new WeatherStats(0, 0.0));
+
+        for (WeatherData day : weatherData) {
+            double temperature = day.getTemperature();
+            String tempRange;
+            if (temperature < 0) {
+                tempRange = "<0";
+            } else if (0 <= temperature && temperature <= 10) {
+                tempRange = "0-10";
+            } else if (10 < temperature && temperature <= 20) {
+                tempRange = "10-20";
+            } else {
+                tempRange = "20+";
+            }
+
+            WeatherStats stats = tempRanges.get(tempRange);
+            stats.count++;
+            stats.totalHumidity += day.getHumidity();
+        }
+
+        // Calculate average humidity for each range (avoid division by zero)
+        for (String rangeName : tempRanges.keySet()) {
+            WeatherStats stats = tempRanges.get(rangeName);
+            int count = stats.count;
+            if (count > 0) {
+                stats.averageHumidity = stats.totalHumidity / count;
+            } else {
+                stats.averageHumidity = 0.0;
+            }
+        }
+
+        return tempRanges;
+    }
+
+    public static void main(String[] args) {
+        // Sample weather data (replace with your actual data)
+        WeatherData[] weather = new WeatherData[]{
+                new WeatherData(-5.0, 60),
+                new WeatherData(8.0, 75),
+                new WeatherData(15.0, 80),
+                new WeatherData(22.0, 65),
+                new WeatherData(5.0, 50),
+        };
+
+        // Analyze weather data and print results
+        HashMap<String, WeatherStats> weatherAnalysis = analyzeWeather(weather);
+        for (String tempRange : weatherAnalysis.keySet()) {
+            WeatherStats stats = weatherAnalysis.get(tempRange);
+            System.out.println("Temperature Range: " + tempRange + "°C");
+            System.out.println("  - Days: " + stats.count);
+            System.out.println("  - Average Humidity: " + String.format("%.2f", stats.averageHumidity) + "%");
+            System.out.println();
+        }
+    }
+}
+
+class WeatherData {
+    private double temperature;
+    private double humidity;
+
+    public WeatherData(double temperature, double humidity) {
+        this.temperature = temperature;
+        this.humidity = humidity;
+    }
+
+    public double getTemperature() {
+        return temperature;
+    }
+
+    public double getHumidity() {
+        return humidity;
+    }
+}
+
+class WeatherStats {
+    public int count;
+    public double totalHumidity;
+    public double averageHumidity;
+
+    public WeatherStats(int count, double totalHumidity) {
+        this.count = count;
+        this.totalHumidity = totalHumidity;
+        this.averageHumidity = 0.0; // Initialize to avoid division by zero
+    }
+}
