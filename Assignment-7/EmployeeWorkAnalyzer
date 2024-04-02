@@ -1,0 +1,57 @@
+public class EmployeeWorkAnalyzer {
+
+    public static WorkSummary analyzeWorkHours(double[] workHours) {
+        int moreThan40Count = 0;
+        int exactly40Count = 0;
+        int lessThan40Count = 0;
+        double totalMoreThan40 = 0.0;
+        double totalLessThan40 = 0.0;
+
+        for (double hours : workHours) {
+            if (hours > 40) {
+                moreThan40Count++;
+                totalMoreThan40 += hours;
+            } else if (hours == 40) {
+                exactly40Count++;
+            } else {
+                lessThan40Count++;
+                totalLessThan40 += hours;
+            }
+        }
+
+        double avgMoreThan40 = moreThan40Count > 0 ? totalMoreThan40 / moreThan40Count / 7 : 0.0;
+        double avgLessThan40 = lessThan40Count > 0 ? totalLessThan40 / lessThan40Count / 7 : 0.0;
+
+        return new WorkSummary(moreThan40Count, exactly40Count, lessThan40Count, avgMoreThan40, avgLessThan40);
+    }
+
+    public static void main(String[] args) {
+        // Sample work hours data (replace with your actual data)
+        double[] hours = new double[]{45, 40, 35, 42, 38, 40, 50};
+
+        // Analyze work hours and print results
+        WorkSummary summary = analyzeWorkHours(hours);
+        System.out.println("Work Hours Analysis:");
+        System.out.println("  - More than 40 hours: " + summary.moreThan40Count + " employees");
+        System.out.println("    - Average daily hours: " + String.format("%.2f", summary.avgMoreThan40));
+        System.out.println("  - Exactly 40 hours: " + summary.exactly40Count + " employees");
+        System.out.println("  - Less than 40 hours: " + summary.lessThan40Count + " employees");
+        System.out.println("    - Average daily hours: " + String.format("%.2f", summary.avgLessThan40));
+    }
+}
+
+class WorkSummary {
+    public int moreThan40Count;
+    public int exactly40Count;
+    public int lessThan40Count;
+    public double avgMoreThan40;
+    public double avgLessThan40;
+
+    public WorkSummary(int moreThan40Count, int exactly40Count, int lessThan40Count, double avgMoreThan40, double avgLessThan40) {
+        this.moreThan40Count = moreThan40Count;
+        this.exactly40Count = exactly40Count;
+        this.lessThan40Count = lessThan40Count;
+        this.avgMoreThan40 = avgMoreThan40;
+        this.avgLessThan40 = avgLessThan40;
+    }
+}
