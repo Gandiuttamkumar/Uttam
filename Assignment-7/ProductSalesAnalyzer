@@ -1,0 +1,74 @@
+import java.util.HashMap;
+
+public class ProductSalesAnalyzer {
+
+    public static HashMap<String, SalesData> analyzeSales(ProductSale[] salesData) {
+        HashMap<String, SalesData> priceRanges = new HashMap<>();
+        priceRanges.put("0-50", new SalesData(0, 0.0));
+        priceRanges.put("50-100", new SalesData(0, 0.0));
+        priceRanges.put("100-200", new SalesData(0, 0.0));
+        priceRanges.put("200+", new SalesData(0, 0.0));
+
+        for (ProductSale sale : salesData) {
+            double price = sale.getPrice();
+            String priceRange;
+            if (0 <= price && price <= 50) {
+                priceRange = "0-50";
+            } else if (50 < price && price <= 100) {
+                priceRange = "50-100";
+            } else if (100 < price && price <= 200) {
+                priceRange = "100-200";
+            } else {
+                priceRange = "200+";
+            }
+
+            SalesData rangeData = priceRanges.get(priceRange);
+            rangeData.count++;
+            rangeData.totalRevenue += price;
+        }
+
+        return priceRanges;
+    }
+
+    public static void main(String[] args) {
+        // Sample sales data (replace with your actual data)
+        ProductSale[] sales = new ProductSale[]{
+                new ProductSale(35.0),
+                new ProductSale(80.0),
+                new ProductSale(150.0),
+                new ProductSale(220.0),
+                new ProductSale(10.0),
+        };
+
+        // Analyze sales and print results
+        HashMap<String, SalesData> salesAnalysis = analyzeSales(sales);
+        for (String priceRange : salesAnalysis.keySet()) {
+            SalesData data = salesAnalysis.get(priceRange);
+            System.out.println("Price Range: " + priceRange);
+            System.out.println("  - Count: " + data.count);
+            System.out.println("  - Total Revenue: $" + String.format("%.2f", data.totalRevenue));
+        }
+    }
+}
+
+class ProductSale {
+    private double price;
+
+    public ProductSale(double price) {
+        this.price = price;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+}
+
+class SalesData {
+    public int count;
+    public double totalRevenue;
+
+    public SalesData(int count, double totalRevenue) {
+        this.count = count;
+        this.totalRevenue = totalRevenue;
+    }
+}
