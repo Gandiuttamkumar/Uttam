@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Departmental Store Customer Information</title>
+</head>
+<body>
+    <h1>Departmental Store Customer Information</h1>
+    <form action="" method="post">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+
+        <label for="phone">Contact Phone No.:</label>
+        <input type="tel" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="XXX-XXX-XXXX" required><br><br>
+
+        <label for="days">Preferred Days of Purchasing (select all that apply):</label><br>
+        <input type="checkbox" id="day_monday" name="days[]" value="Monday"> Monday
+        <input type="checkbox" id="day_tuesday" name="days[]" value="Tuesday"> Tuesday
+        <input type="checkbox" id="day_wednesday" name="days[]" value="Wednesday"> Wednesday
+        <input type="checkbox" id="day_thursday" name="days[]" value="Thursday"> Thursday
+        <input type="checkbox" id="day_friday" name="days[]" value="Friday"> Friday
+        <input type="checkbox" id="day_saturday" name="days[]" value="Saturday"> Saturday
+        <input type="checkbox" id="day_sunday" name="days[]" value="Sunday"> Sunday<br><br>
+
+        <label for="favourite_item">Favourite Item:</label>
+        <select id="favourite_item" name="favourite_item">
+            <option value="">Select an item</option>
+            <option value="clothing">Clothing</option>
+            <option value="electronics">Electronics</option>
+            <option value="home_goods">Home Goods</option>
+            <option value="groceries">Groceries</option>
+            <option value="other">Other</option>
+        </select><br><br>
+
+        <label for="suggestion">Suggestion:</label>
+        <textarea id="suggestion" name="suggestion" rows="4" cols="50"></textarea><br><br>
+
+        <button type="submit">Submit</button>
+        <button type="reset">Reset</button>
+    </form>
+</body>
+</html>
